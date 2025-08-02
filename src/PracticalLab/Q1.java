@@ -15,7 +15,7 @@ class student{
 	public void display() {
 		System.out.println("Name: "+name);
 		System.out.println("Roll No: "+rollNo);
-		System.out.println("Marks: ");
+		System.out.print("Marks: ");
 		for(int i=0; i<5; i++) {
 			System.out.print(marks[i]+" ");
 		}
