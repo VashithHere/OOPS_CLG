@@ -1,6 +1,7 @@
 package PracticalLab;
 import java.util.ArrayList;
 import java.util.*;
+import java.io.*;
 
 import java.util.Scanner;
 
@@ -24,15 +25,29 @@ class studentInfo{
 		return rollNo;
 	}
 	
-	public void display() {
-		System.out.println("Name: "+name);
-		System.out.println("RollNo: "+rollNo);
-		System.out.println();
-		System.out.println("Courses List: ");
+//	public void display() {
+//		System.out.println("Name: "+name);
+//		System.out.println("RollNo: "+rollNo);
+//		System.out.println();
+//		System.out.println("Courses List: ");
+//		
+//		for(String cour: course) {
+//			System.out.println(cour);
+//		}
+//	}
+	
+	public String toString() {
+		StringBuilder sbobj = new StringBuilder();
 		
+		sbobj.append("Name: "+name).append("\n");
+		sbobj.append("Roll Number: "+rollNo).append("\n");
+		sbobj.append("Courses List:\n");
 		for(String cour: course) {
-			System.out.println(cour);
+			sbobj.append(cour+"\n");
 		}
+		sbobj.append("- - - - - - - - - - - - - - - - - - - - - - - - -\n");
+		
+		return sbobj.toString();
 	}
 }
 
@@ -60,13 +75,38 @@ class course{
 	}
 }
 
+class FileSystem{
+	BufferedWriter bobj;
+	
+//	FileSystem() throws IOException{
+//		bobj =new BufferedWriter(new FileWriter("C:\\Users\\varsh\\OneDrive\\Desktop\\Courses.txt",true));
+//	}
+	
+	public void writing(String obj) {
+		try {
+			bobj =new BufferedWriter(new FileWriter("C:\\Users\\varsh\\OneDrive\\Desktop\\Courses.txt",true));
+			bobj.write(obj);
+			bobj.close();
+		}catch(IOException i) {
+			System.out.println(i);
+		}
+	}
+}
+
 public class Q2 {
 	
-	static HashMap<Integer,studentInfo> studentList = new HashMap<>();
+	static Scanner sc;
+	static HashMap<Integer,studentInfo> studentList;
+	static FileSystem fobj;
+	
+	static{
+		sc = new Scanner(System.in);
+		studentList = new HashMap<>();
+		fobj = new FileSystem();
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Scanner sc = new Scanner(System.in);
 		
 		int schoice;
 		do {
@@ -96,14 +136,16 @@ public class Q2 {
 			studentInfo s1 = new studentInfo(name,rollNo,obj);
 			studentList.put(rollNo,s1);
 			
+//			for(studentInfo obj1 : studentList.values()) {
+				System.out.println(s1.toString());
+				fobj.writing(s1.toString());
+//				System.out.println("- - - - - - - - - - - - - -");
+//			}
+			
 			System.out.println("Do you want to add other students: (1/0)");
 			schoice = sc.nextInt();
 			sc.nextLine();
-		}while(schoice==1);
-		
-		for(studentInfo obj1 : studentList.values()) {
-			obj1.display();
-			System.out.println("- - - - - - - - - - - - - -");
-		}
+			
+		}while(schoice==1);	
 	}
 }
