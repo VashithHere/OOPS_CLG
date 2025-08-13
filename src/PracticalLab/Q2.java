@@ -2,7 +2,6 @@ package PracticalLab;
 import java.util.ArrayList;
 import java.util.*;
 import java.io.*;
-
 import java.util.Scanner;
 
 class studentInfo{
@@ -25,22 +24,11 @@ class studentInfo{
 		return rollNo;
 	}
 	
-//	public void display() {
-//		System.out.println("Name: "+name);
-//		System.out.println("RollNo: "+rollNo);
-//		System.out.println();
-//		System.out.println("Courses List: ");
-//		
-//		for(String cour: course) {
-//			System.out.println(cour);
-//		}
-//	}
-	
 	public String toString() {
 		StringBuilder sbobj = new StringBuilder();
 		
-		sbobj.append("Name: "+name).append("\n");
 		sbobj.append("Roll Number: "+rollNo).append("\n");
+		sbobj.append("Name: "+name).append("\n");
 		sbobj.append("Courses List:\n");
 		for(String cour: course) {
 			sbobj.append(cour+"\n");
@@ -73,20 +61,44 @@ class course{
 		
 		return course;
 	}
+	
+	
 }
 
 class FileSystem{
 	BufferedWriter bobj;
-	
-//	FileSystem() throws IOException{
-//		bobj =new BufferedWriter(new FileWriter("C:\\Users\\varsh\\OneDrive\\Desktop\\Courses.txt",true));
-//	}
 	
 	public void writing(String obj) {
 		try {
 			bobj =new BufferedWriter(new FileWriter("C:\\Users\\varsh\\OneDrive\\Desktop\\Courses.txt",true));
 			bobj.write(obj);
 			bobj.close();
+		}catch(IOException i) {
+			System.out.println(i);
+		}
+	}
+	
+	public void reading(int rollNo) {
+		try {
+			BufferedReader bobj =new BufferedReader(new FileReader("C:\\Users\\varsh\\OneDrive\\Desktop\\Courses.txt"));
+			String line;
+			boolean flag = false;
+			while((line=bobj.readLine())!=null) {
+				if(line.startsWith("Roll Number: ")) {
+					int num = Integer.parseInt(line.split(": ")[1].trim());
+					if(num==rollNo) {
+						flag = true;
+						System.out.println(line);
+						while((line=bobj.readLine())!=null&&!line.startsWith("-")) {
+							System.out.println(line);
+						}
+						System.out.println("\n");
+					}
+				}
+			}
+			if(flag==false) {
+				System.out.println("Roll Number "+rollNo+" not found\n");
+			}
 		}catch(IOException i) {
 			System.out.println(i);
 		}
@@ -104,11 +116,10 @@ public class Q2 {
 		studentList = new HashMap<>();
 		fobj = new FileSystem();
 	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
+	
+	public static void enrolment() {
 		int schoice;
+		sc.nextLine();
 		do {
 			
 			System.out.println("Enter your name");
@@ -136,16 +147,58 @@ public class Q2 {
 			studentInfo s1 = new studentInfo(name,rollNo,obj);
 			studentList.put(rollNo,s1);
 			
-//			for(studentInfo obj1 : studentList.values()) {
-				System.out.println(s1.toString());
-				fobj.writing(s1.toString());
-//				System.out.println("- - - - - - - - - - - - - -");
-//			}
+			System.out.println(s1.toString());
+			fobj.writing(s1.toString());
 			
 			System.out.println("Do you want to add other students: (1/0)");
 			schoice = sc.nextInt();
 			sc.nextLine();
 			
 		}while(schoice==1);	
+		return;
+	}
+	
+	public static void getCourses() {
+		System.out.println("1: Operating System");
+		System.out.println("2: Data Base Management System");
+		System.out.println("3: Artificial Intelligence and Machine Learning");
+		System.out.println("4: Object Oriented Programming\n");
+		return;
+	}
+	
+	public static void checkWithRollNo() {
+		System.out.print("Enter the Roll Number: ");
+		int num = sc.nextInt();
+		
+		FileSystem obj = new FileSystem();
+		obj.reading(num);
+		return;
+	}
+
+	public static void main(String[] args) {
+		int loginChoice;
+		do {
+			System.out.println("Welcome to Course Registration");
+			System.out.println("1. Enroll into Courses");
+			System.out.println("2. Get list of Courses");
+			System.out.println("3. Check Enrolled Courses through RollNumber");
+			System.out.println("4. Exit");
+			
+			loginChoice = sc.nextInt();
+			switch(loginChoice) {
+			case 1:
+				enrolment();
+				break;
+			case 2:
+				getCourses();
+				break;
+			case 3:
+				checkWithRollNo();
+				break;
+			case 4:
+				System.out.println("Thanks for using");
+				return;
+			}
+		}while(loginChoice!=4);
 	}
 }
